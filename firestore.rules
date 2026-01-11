@@ -1,0 +1,198 @@
+rules_version = '2';
+
+/**
+ * @fileoverview Firestore Security Rules for the BidVerse Application
+ *
+ * @description
+ * This ruleset is designed for the Prototyping Mode of the BidVerse application.
+ * It prioritizes strict, user-centric authorization while maintaining flexibility
+ * in data schemas to allow for rapid development and iteration.
+ *
+ * @philosophy
+ * Core Philosophy: The security model is built on user ownership and public accessibility.
+ * User-specific data is strictly private, while application content like products
+ * and categories is publicly readable to create an open marketplace experience.
+ * Writes are always authenticated and authorized.
+ *
+ * Data Structure:
+ * - /users/{userId}: Private user profiles, accessible only by the owner.
+ * - /categories/{categoryId}: Public, read-only product categories.
+ * - /products/{productId}: Public product listings. Writes are restricted to the seller.
+ * - /products/{productId}/bids/{bidId}: Public bids on a product. Only signed-in users can create bids.
+ *
+ * Key Security Decisions:
+ * - User data is private. Listing users is disabled to protect privacy.
+ * - Products and Categories are public and read-only for anonymous users to browse.
+ * - Product creation and modification are strictly limited to the authenticated seller.
+ * - Categories are treated as admin-managed content and are read-only for all clients.
+ * - Bids can be created by any authenticated user, but cannot be updated or deleted to maintain auction integrity.
+ *
+ * Denormalization for Authorization:
+ * - The `products` collection contains a `sellerId` field. This is critical for
+ *   enforcing seller-only write access directly in the rule, avoiding costly
+ *   `get()` calls to other collections.
+ * - The `bids` subcollection documents contain a `userId` and `productId`. These
+ *   are validated on creation to ensure relational integrity without extra reads.
+ */
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    // ------------------------------------------------------------------------
+    // Helper Functions
+    // ------------------------------------------------------------------------
+
+    /**
+     * Returns true if the user is authenticated.
+     */
+    function isSignedIn() {
+      return request.auth != null;
+    }
+
+    /**
+     * Returns true if the authenticated user's UID matches the provided userId.
+     * This is the core of the ownership model.
+     */
+    function isOwner(userId) {
+      return isSignedIn() && request.auth.uid == userId;
+    }
+
+    /**
+     * Returns true if the document being written to already exists.
+     * Used to protect against updates or deletes on non-existent documents.
+     */
+    function isExistingDoc() {
+      return resource != null;
+    }
+
+    /**
+     * A composite helper for update/delete operations, ensuring the user
+     * is the owner and the document exists.
+     */
+    function isExistingOwner(userId) {
+      return isOwner(userId) && isExistingDoc();
+    }
+
+    /**
+     * Checks if the authenticated user is the seller of an existing product document.
+     */
+    function isExistingSeller() {
+      return isExistingDoc() && isSignedIn() && request.auth.uid == resource.data.sellerId;
+    }
+
+    /**
+     * Validates a new user document on creation.
+     * Ensures the document's internal `id` matches the user's auth UID.
+     */
+    function isValidNewUser(userId) {
+      return request.resource.data.id == userId;
+    }
+
+    /**
+     * Enforces immutability of the user's ID field on update.
+     * Prevents re-assigning ownership of a user profile.
+     */
+    function isImmutableUser() {
+      return request.resource.data.id == resource.data.id;
+    }
+
+    /**
+     * Validates a new product on creation.
+     * Ensures the new product's `sellerId` is the UID of the user creating it.
+     */
+    function isValidNewProduct() {
+      return request.resource.data.sellerId == request.auth.uid;
+    }
+
+    /**
+     * Enforces immutability of the product's sellerId field on update.
+     */
+    function isImmutableProduct() {
+      return request.resource.data.sellerId == resource.data.sellerId;
+    }
+
+    /**
+     * Validates a new bid on creation, ensuring data integrity and preventing
+     * a seller from bidding on their own item.
+     */
+    function isValidNewBid(productId) {
+      let isBidder = request.resource.data.userId == request.auth.uid;
+      let isForThisProduct = request.resource.data.productId == productId;
+      let isNotTheSeller = get(/databases/$(database)/documents/products/$(productId)).data.sellerId != request.auth.uid;
+      return isBidder && isForThisProduct && isNotTheSeller;
+    }
+
+
+    // ------------------------------------------------------------------------
+    // Collection Rules
+    // ------------------------------------------------------------------------
+
+    /**
+     * @description Manages user profiles. A user can create their own profile
+     * and has full control over it, but cannot see or interact with other users' profiles.
+     * @path /users/{userId}
+     * @allow (create) A new user with uid 'user_abc' creating their own document at /users/user_abc.
+     * @deny (get) User 'user_abc' trying to read the document at /users/user_xyz.
+     * @deny (list) Any user trying to list all documents in the /users collection.
+     * @principle Restricts access to a user's own data tree and prevents user enumeration.
+     */
+    match /users/{userId} {
+      allow get: if isOwner(userId);
+      allow list: if false;
+      allow create: if isOwner(userId) && isValidNewUser(userId);
+      allow update: if isExistingOwner(userId) && isImmutableUser();
+      allow delete: if isExistingOwner(userId);
+    }
+
+    /**
+     * @description Manages product categories. This data is considered public
+     * but managed by administrators. Client applications have read-only access.
+     * @path /categories/{categoryId}
+     * @allow (get, list) Any user (signed-in or anonymous) reading categories.
+     * @deny (create, update, delete) Any client trying to write to the categories collection.
+     * @principle Secures admin-managed data by making it read-only for clients.
+     */
+    match /categories/{categoryId} {
+      allow get: if true;
+      allow list: if true;
+      allow create: if false;
+      allow update: if false;
+      allow delete: if false;
+    }
+
+    /**
+     * @description Manages product listings. All products are publicly visible.
+     * Only authenticated users can create listings, and they can only modify or
+     * delete products they are the seller of.
+     * @path /products/{productId}
+     * @allow (list) An anonymous user browsing all available products.
+     * @allow (create) A signed-in user creating a new product where the `sellerId` matches their UID.
+     * @deny (update) A user trying to change the details of a product they did not list.
+     * @principle Enforces document ownership for writes while allowing public reads for browsing.
+     */
+    match /products/{productId} {
+      allow get: if true;
+      allow list: if true;
+      allow create: if isSignedIn() && isValidNewProduct();
+      allow update: if isExistingSeller() && isImmutableProduct();
+      allow delete: if isExistingSeller();
+
+      /**
+       * @description Manages bids for a specific product. Bids are publicly visible.
+       * Any authenticated user (except the seller) can place a bid. Bids are immutable
+       * to ensure auction integrity.
+       * @path /products/{productId}/bids/{bidId}
+       * @allow (create) A signed-in user placing a bid on a product.
+       * @deny (create) The seller of the product trying to bid on their own item.
+       * @deny (update, delete) Any user trying to modify or retract an existing bid.
+       * @principle Ensures data integrity by making state-changing records (bids) immutable after creation.
+       */
+      match /bids/{bidId} {
+        allow get: if true;
+        allow list: if true;
+        allow create: if isSignedIn() && isValidNewBid(productId);
+        allow update: if false;
+        allow delete: if false;
+      }
+    }
+  }
+}

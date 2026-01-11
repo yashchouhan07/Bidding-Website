@@ -1,0 +1,106 @@
+{
+  "placeholderImages": [
+    {
+      "id": "electronicsCategory",
+      "description": "Category image for electronics",
+      "imageUrl": "https://images.unsplash.com/photo-1515940175183-6798529cb860?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwyfHx0ZWNoJTIwZ2FkZ2V0c3xlbnwwfHx8fDE3NjY2NDA1MDF8MA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "tech gadgets"
+    },
+    {
+      "id": "collectiblesCategory",
+      "description": "Category image for collectibles and art",
+      "imageUrl": "https://images.unsplash.com/photo-1605429523419-d828acb941d9?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw3fHxhcnQlMjBnYWxsZXJ5fGVufDB8fHx8MTc2NjYwMTQ1MXww&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "art gallery"
+    },
+    {
+      "id": "fashionCategory",
+      "description": "Category image for fashion",
+      "imageUrl": "https://images.unsplash.com/photo-1666861585341-5bd1e7b1ed71?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw0fHxjbG90aGluZyUyMGJvdXRpcXVlfGVufDB8fHx8MTc2NjY1NDEzNHww&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "clothing boutique"
+    },
+    {
+      "id": "homeCategory",
+      "description": "Category image for home and garden",
+      "imageUrl": "https://images.unsplash.com/photo-1594873604892-b599f847e859?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwzfHxtb2Rlcm4lMjBpbnRlcmlvcnxlbnwwfHx8fDE3NjY2NTQxMzR8MA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "modern interior"
+    },
+    {
+      "id": "vehiclesCategory",
+      "description": "Category image for vehicles",
+      "imageUrl": "https://images.unsplash.com/photo-1591293835940-934a7c4f2d9b?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwzfHxjbGFzc2ljJTIwY2FyfGVufDB8fHx8MTc2NjU5Nzc0NXww&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "classic car"
+    },
+    {
+      "id": "otherCategory",
+      "description": "Category image for other items",
+      "imageUrl": "https://images.unsplash.com/photo-1747769610550-cd29a9429560?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw1fHxtaXNjZWxsYW5lb3VzJTIwb2JqZWN0c3xlbnwwfHx8fDE3NjY2NTQxMzR8MA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "miscellaneous objects"
+    },
+    {
+      "id": "productVintageCamera1",
+      "description": "Vintage Leica camera",
+      "imageUrl": "https://images.unsplash.com/photo-1492671357725-4c36ca51d815?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw5fHx2aW50YWdlJTIwY2FtZXJhfGVufDB8fHx8MTc2NjY0MDM4NHww&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "vintage camera"
+    },
+    {
+      "id": "productVintageCamera2",
+      "description": "Vintage Leica camera side view",
+      "imageUrl": "https://images.unsplash.com/photo-1453728013993-6d66e9c9123a?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw0fHxjYW1lcmElMjBsZW5zfGVufDB8fHx8MTc2NjU1Mzc1Mnww&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "camera lens"
+    },
+    {
+      "id": "productVintageCamera3",
+      "description": "Vintage Leica camera detail",
+      "imageUrl": "https://images.unsplash.com/photo-1509255806757-ca81636763ce?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw5fHxmaWxtJTIwY2FtZXJhfGVufDB8fHx8MTc2NjY1NDEzNHww&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "film camera"
+    },
+    {
+      "id": "productAbstractPainting1",
+      "description": "Abstract painting 'Cosmos'",
+      "imageUrl": "https://images.unsplash.com/photo-1618331835717-801e976710b2?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw0fHxhYnN0cmFjdCUyMHBhaW50aW5nfGVufDB8fHx8MTc2NjYzNTMwN3ww&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "abstract painting"
+    },
+    {
+      "id": "productDesignerHandbag1",
+      "description": "Luxury designer handbag",
+      "imageUrl": "https://images.unsplash.com/photo-1689844496219-7afba91f51ef?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwxMHx8bGVhdGhlciUyMGhhbmRiYWd8ZW58MHx8fHwxNzY2NTcwNDkxfDA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "leather handbag"
+    },
+    {
+      "id": "productLuxuryWatch",
+      "description": "Luxury chronograph watch",
+      "imageUrl": "https://images.unsplash.com/photo-1617617877206-bcdb7990ef2d?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw1fHxjaHJvbm9ncmFwaCUyMHdhdGNofGVufDB8fHx8MTc2NjY1NDkwOXww&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "chronograph watch"
+    },
+    {
+      "id": "productGalaxySneakers",
+      "description": "Limited Edition 'Galaxy' Sneakers",
+      "imageUrl": "https://images.unsplash.com/photo-1581327323320-dbded32d5598?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw1fHxjb2xvcmZ1bCUyMHNuZWFrZXJzfGVufDB8fHx8MTc2NjY1NDkwOXww&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "colorful sneakers"
+    },
+    {
+      "id": "productAntiqueChair",
+      "description": "Antique Wooden Chair",
+      "imageUrl": "https://images.unsplash.com/photo-1634798245965-03669c757183?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwzfHx3b29kZW4lMjBjaGFpcnxlbnwwfHx8fDE3NjY1OTQ1MzR8MA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "wooden chair"
+    },
+    {
+      "id": "productBookCollection",
+      "description": "Rare Book Collection",
+      "imageUrl": "https://images.unsplash.com/photo-1613324766451-2d03b2ea8190?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw3fHxvbGQlMjBib29rc3xlbnwwfHx8fDE3NjY2NTQ5MDl8MA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "old books"
+    },
+    {
+      "id": "productElectricGuitar",
+      "description": "Vintage Electric Guitar",
+      "imageUrl": "https://images.unsplash.com/photo-1550985616-10810253b84d?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw0fHxlbGVjdHJpYyUyMGd1aXRhcnxlbnwwfHx8fDE3NjY2MDQwOTF8MA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "electric guitar"
+    },
+    {
+      "id": "howItWorksBg",
+      "description": "Abstract background for How it Works section",
+      "imageUrl": "https://images.unsplash.com/photo-1609083590460-7b8cc0ca65f8?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw4fHxkYXJrJTIwYWJzdHJhY3R8ZW58MHx8fHwxNzY2NjU0MTM0fDA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "dark abstract"
+    }
+  ]
+}

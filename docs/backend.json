@@ -1,0 +1,228 @@
+{
+  "entities": {
+    "User": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "title": "User",
+      "type": "object",
+      "description": "Represents a user of the BidVerse platform.",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "Unique identifier for the user."
+        },
+        "username": {
+          "type": "string",
+          "description": "The username of the user."
+        },
+        "email": {
+          "type": "string",
+          "description": "The email address of the user.",
+          "format": "email"
+        },
+        "registrationDate": {
+          "type": "string",
+          "description": "The date and time the user registered.",
+          "format": "date-time"
+        },
+        "balance": {
+          "type": "number",
+          "description": "The user's current wallet balance."
+        }
+      },
+      "required": [
+        "id",
+        "username",
+        "email",
+        "registrationDate",
+        "balance"
+      ]
+    },
+    "Product": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "title": "Product",
+      "type": "object",
+      "description": "Represents a product listed for auction on BidVerse.",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "Unique identifier for the product."
+        },
+        "name": {
+          "type": "string",
+          "description": "The name of the product."
+        },
+        "description": {
+          "type": "string",
+          "description": "A detailed description of the product."
+        },
+        "categoryId": {
+          "type": "string",
+          "description": "Reference to Category. (Relationship: Category 1:N Product)"
+        },
+        "sellerId": {
+          "type": "string",
+          "description": "Reference to User. (Relationship: User 1:N Product). The user who is selling the product."
+        },
+        "startingBid": {
+          "type": "number",
+          "description": "The starting bid price for the product."
+        },
+        "imageUrl": {
+          "type": "string",
+          "description": "URL of the product image.",
+          "format": "uri"
+        }
+      },
+      "required": [
+        "id",
+        "name",
+        "description",
+        "categoryId",
+        "sellerId",
+        "startingBid",
+        "imageUrl"
+      ]
+    },
+    "Category": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "title": "Category",
+      "type": "object",
+      "description": "Represents a category of products on BidVerse.",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "Unique identifier for the category."
+        },
+        "name": {
+          "type": "string",
+          "description": "The name of the category."
+        },
+        "description": {
+          "type": "string",
+          "description": "A description of the category."
+        }
+      },
+      "required": [
+        "id",
+        "name",
+        "description"
+      ]
+    },
+    "Bid": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "title": "Bid",
+      "type": "object",
+      "description": "Represents a bid placed on a product during an auction.",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "Unique identifier for the bid."
+        },
+        "productId": {
+          "type": "string",
+          "description": "Reference to Product. (Relationship: Product 1:N Bid). The product the bid is for."
+        },
+        "userId": {
+          "type": "string",
+          "description": "Reference to User. (Relationship: User 1:N Bid). The user who placed the bid."
+        },
+        "bidAmount": {
+          "type": "number",
+          "description": "The amount of the bid."
+        },
+        "bidTime": {
+          "type": "string",
+          "description": "The date and time the bid was placed.",
+          "format": "date-time"
+        }
+      },
+      "required": [
+        "id",
+        "productId",
+        "userId",
+        "bidAmount",
+        "bidTime"
+      ]
+    }
+  },
+  "auth": {
+    "providers": [
+      "password",
+      "anonymous",
+      "google.com"
+    ]
+  },
+  "firestore": {
+    "structure": [
+      {
+        "path": "/users/{userId}",
+        "definition": {
+          "entityName": "User",
+          "schema": {
+            "$ref": "#/backend/entities/User"
+          },
+          "description": "Stores user profiles. User data is private and only accessible to the user themselves.",
+          "params": [
+            {
+              "name": "userId",
+              "description": "The unique identifier for the user."
+            }
+          ]
+        }
+      },
+      {
+        "path": "/products/{productId}",
+        "definition": {
+          "entityName": "Product",
+          "schema": {
+            "$ref": "#/backend/entities/Product"
+          },
+          "description": "Stores product listings. Includes denormalized 'categoryId' field for efficient category-based queries.",
+          "params": [
+            {
+              "name": "productId",
+              "description": "The unique identifier for the product."
+            }
+          ]
+        }
+      },
+      {
+        "path": "/categories/{categoryId}",
+        "definition": {
+          "entityName": "Category",
+          "schema": {
+            "$ref": "#/backend/entities/Category"
+          },
+          "description": "Stores categories of products.",
+          "params": [
+            {
+              "name": "categoryId",
+              "description": "The unique identifier for the category."
+            }
+          ]
+        }
+      },
+      {
+        "path": "/products/{productId}/bids/{bidId}",
+        "definition": {
+          "entityName": "Bid",
+          "schema": {
+            "$ref": "#/backend/entities/Bid"
+          },
+          "description": "Stores bids for a specific product. Each bid is a subcollection under the product document.",
+          "params": [
+            {
+              "name": "productId",
+              "description": "The unique identifier for the product."
+            },
+            {
+              "name": "bidId",
+              "description": "The unique identifier for the bid."
+            }
+          ]
+        }
+      }
+    ],
+    "reasoning": "The Firestore structure is designed to support BidVerse's core features, focusing on secure access and scalability. Key decisions include path-based ownership for user-related data and denormalization of category data into products for efficient querying. The `/users/{userId}` collection stores user profiles. Products are stored in the `/products/{productId}` collection, including a denormalized `categoryId` field to facilitate category-based queries without requiring joins. Bids are stored in the `/products/{productId}/bids/{bidId}` subcollection to easily retrieve bids for a specific product. Categories are stored in the `/categories/{categoryId}` collection. This structure facilitates Authorization Independence. The `categoryId` is denormalized into `products`, which reduces dependencies on `get()` calls in security rules. This design also supports required QAPs by segregating data based on ownership (users) and product context (bids). This segregation simplifies list operations and security rules."
+  }
+}
